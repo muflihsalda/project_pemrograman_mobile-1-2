@@ -1,11 +1,11 @@
-# project_pemrograman_mobile-1
+# project_pemrograman_mobile 1 - 2
 
 
 Nama    : Muflih Salda Maulana
 
 NIM     : 312410527
 
-Kelas:  : TI.24.A.5
+Kelas:  : I241E
 
 Matakuliah : Pemograman Mobile 1
 
