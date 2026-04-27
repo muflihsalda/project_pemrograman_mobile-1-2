@@ -209,14 +209,11 @@ https://youtube.com/shorts/kCZWVr-wZTA?feature=share
 
 
 
-Link Vidio tampilan Spless screen dan prototype 
+## Link Vidio tampilan Spless screen dan prototype 
 
 https://youtu.be/G6a6rZumr2Q?si=63cH7D6pzo6tI68i 
 
-Link figma
+## Link figma
 
 https://www.figma.com/proto/tGTBqAyhH065rvIyyv3Wyt/APK-pengingat-sholat?node-id=1-5&starting-point-node-id=45%3A36&t=8XAzPGXmL89dUKco-1
 
-## Link jadwal pada ClickUp
-
-https://sharing.clickup.com/90181808112/b/h/6-901813160324-2/79fba5298e6dc21
