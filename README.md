@@ -217,3 +217,18 @@ https://youtu.be/G6a6rZumr2Q?si=63cH7D6pzo6tI68i
 
 https://www.figma.com/proto/tGTBqAyhH065rvIyyv3Wyt/APK-pengingat-sholat?node-id=1-5&starting-point-node-id=45%3A36&t=8XAzPGXmL89dUKco-1
 
+
+---
+### Pemrograman Mobile2 
+
+1. Update figma Untuk Menambahkan Fitur kalender hijriyah dan Juga AI untuk Memberikan Saran ibadah sunah yang tertera pada kolom event pahala 
+
+<img width="642" height="474" alt="image" src="https://github.com/user-attachments/assets/9a3a9e9c-46cb-4c46-8e0f-d9afdf91b7a1" />
+
+Link Prototype
+
+https://www.figma.com/proto/tGTBqAyhH065rvIyyv3Wyt/APK-pengingat-sholat?node-id=169-285&t=EbbgREhMNNKu5fhq-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=45%3A36 
+
+2. Implementasi android Untuk Membuat Fitur kalender Hijriyah
+
+
