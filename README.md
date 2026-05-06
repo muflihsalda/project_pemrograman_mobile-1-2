@@ -229,6 +229,71 @@ Link Prototype
 
 https://www.figma.com/proto/tGTBqAyhH065rvIyyv3Wyt/APK-pengingat-sholat?node-id=169-285&t=EbbgREhMNNKu5fhq-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=45%3A36 
 
-2. Implementasi android Untuk Membuat Fitur kalender Hijriyah
+2. Implementasi android Untuk Membuat Fitur Kalender Hijriyah & Event Pahala
+
+Fitur ini merupakan sistem kalender interaktif yang menyelaraskan penanggalan Masehi dengan Hijriyah secara real-time. Selain sebagai penunjuk tanggal, fitur ini berfungsi sebagai pengingat ibadah sunnah (Event Pahala) yang dihitung secara dinamis berdasarkan algoritma penanggalan Islam.
+
+Fungsionalitas Utama
+Dual-Calendar Synchronization: Menampilkan penanggalan Masehi dan Hijriyah secara berdampingan dalam satu tampilan grid yang intuitif.
+
+Dynamic Event Detection (Event Pahala): Secara otomatis mendeteksi dan menandai hari-hari istimewa untuk beribadah, seperti:
+
+Puasa Senin-Kamis: Mendeteksi nama hari dari setiap tanggal Masehi.
+
+Puasa Ayyamul Bidh: Mendeteksi tanggal 13, 14, dan 15 pada setiap bulan Hijriyah (dengan pengecualian pada hari Tasyrik di bulan Dzulhijjah).
+
+Monthly Navigation: Memungkinkan pengguna untuk melihat data penanggalan pada bulan-bulan sebelumnya atau yang akan datang dengan pembaruan data yang sinkron.
+
+Implementasi Teknis
+REST API Integration: Mengonsumsi data dari Aladhan API (gToHCalendar) menggunakan library Volley untuk mendapatkan pemetaan tanggal Masehi ke Hijriyah dalam format JSON.
+
+Custom Grid Adapter: Implementasi CalendarAdapter untuk mengatur logika visual kalender, termasuk perhitungan offset hari agar tanggal satu dimulai pada kolom hari yang tepat (Sunday-Saturday).
+
+Data Parsing & Logic Filtering:
+
+Mengolah struktur data JSON yang kompleks untuk mengekstraksi nama bulan Hijriyah, tahun, dan informasi hari.
+
+Menggunakan logika kondisional di dalam fungsi checkEvent untuk menentukan jenis ibadah sunnah yang relevan pada tanggal tertentu.
+
+Reactive UI Updates: Menggunakan notifyDataSetChanged() pada RecyclerView dan GridView untuk memastikan antarmuka diperbarui seketika setelah data dari internet berhasil diunduh.
+
+Alur Kerja (Workflow)
+Request: Aplikasi mengirim permintaan ke API Aladhan berdasarkan bulan dan tahun yang sedang ditampilkan di UI.
+
+Processing: Data JSON diterima dan diurai (parsing) untuk mengisi daftar calendarDays (untuk tampilan grid) dan eventPahalaList (untuk daftar kegiatan ibadah).
+
+Validation: Sistem mengecek setiap tanggal apakah memenuhi kriteria ibadah sunnah tertentu.
+
+Rendering: Data ditampilkan ke pengguna; tanggal yang memiliki "Event Pahala" diberikan penanda visual khusus pada kalender.
 
 
+<img width="1267" height="643" alt="image" src="https://github.com/user-attachments/assets/fcd70129-d286-46cf-9227-61c75e42fa40" />
+
+3. Membuat Fitur AI Sunnah Plener
+
+AI Sunnah Planner adalah fitur asisten cerdas yang terintegrasi di dalam aplikasi pengingat ibadah untuk memberikan rekomendasi aktivitas sunnah secara personal. Fitur ini memanfaatkan Large Language Model (LLM) melalui Gemini AI API untuk mengonversi data mentah kalender menjadi pesan motivasi yang kontekstual.
+
+Core Functionalities
+Context-Aware Recommendations: AI menganalisis data harian dari API Aladhan (seperti Puasa Senin-Kamis atau Puasa Ayyamul Bidh) dan menghasilkan pengingat yang spesifik berdasarkan jenis ibadah tersebut.
+
+Natural Language Generation: Mengubah notifikasi kaku menjadi percakapan yang hangat dan manusiawi, sehingga meningkatkan pengalaman pengguna (User Experience).
+
+Personalization: AI menggunakan nama pengguna dan data waktu lokal untuk memberikan instruksi yang relevan, seperti saran persiapan sahur jika terdeteksi adanya jadwal puasa sunnah untuk keesokan harinya.
+
+Technical Implementation
+Large Language Model: Menggunakan model gemini-1.5-flash untuk pemrosesan teks yang cepat dan efisien pada perangkat mobile.
+
+Prompt Engineering: Implementasi teknik prompting pada class GeminiAIHelper.java untuk memastikan output AI tetap berada dalam koridor islami, santun, dan informatif dengan batasan panjang kalimat tertentu.
+
+Asynchronous Processing: Panggilan API dilakukan secara asinkron menggunakan ListenableFuture (Google Guava) untuk memastikan antarmuka aplikasi (UI Thread) tetap responsif dan tidak mengalami freezing saat AI sedang memproses teks.
+
+Secure API Management: Keamanan kunci akses (API Key) dikelola menggunakan file local.properties yang diintegrasikan melalui BuildConfig untuk mencegah kebocoran kredensial pada repositori publik.
+
+Workflow
+Data Fetching: Aplikasi mengambil data kalender Hijriah dari API Aladhan.
+
+Logic Filtering: Sistem menyaring event sunnah yang tersedia di bulan tersebut.
+
+AI Processing: Data event terdekat dikirim sebagai parameter ke Gemini AI.
+
+UI/UX Delivery: Output teks dari AI ditampilkan secara dinamis pada CardView khusus di dalam halaman kalender Hijriah.
