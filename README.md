@@ -269,31 +269,46 @@ Rendering: Data ditampilkan ke pengguna; tanggal yang memiliki "Event Pahala" di
 
 <img width="1267" height="643" alt="image" src="https://github.com/user-attachments/assets/fcd70129-d286-46cf-9227-61c75e42fa40" />
 
-3. Membuat Fitur AI Sunnah Plener
 
-AI Sunnah Planner adalah fitur asisten cerdas yang terintegrasi di dalam aplikasi pengingat ibadah untuk memberikan rekomendasi aktivitas sunnah secara personal. Fitur ini memanfaatkan Large Language Model (LLM) melalui Gemini AI API untuk mengonversi data mentah kalender menjadi pesan motivasi yang kontekstual.
+3. Automated AI Sunnah Notification (Background Processing)
+
+
+Test Noticasi AI
+
+<img width="1078" height="639" alt="image" src="https://github.com/user-attachments/assets/382dc1a1-ccab-4a65-a07b-ad61ab9024b1" />
+
+
+Fitur ini memungkinkan aplikasi untuk memberikan pengingat ibadah secara proaktif setiap hari pada pukul 20:00 WIB tanpa mengharuskan pengguna membuka aplikasi terlebih dahulu. Fitur ini menggabungkan penjadwalan tugas latar belakang dengan kecerdasan buatan untuk menciptakan pengalaman pengguna yang lebih personal.
 
 Core Functionalities
-Context-Aware Recommendations: AI menganalisis data harian dari API Aladhan (seperti Puasa Senin-Kamis atau Puasa Ayyamul Bidh) dan menghasilkan pengingat yang spesifik berdasarkan jenis ibadah tersebut.
+Intelligent Scheduling: Menggunakan sistem antrean tugas yang menjamin pengiriman notifikasi tetap tepat waktu meskipun perangkat dalam kondisi idle atau baru saja dihidupkan ulang (reboot).
 
-Natural Language Generation: Mengubah notifikasi kaku menjadi percakapan yang hangat dan manusiawi, sehingga meningkatkan pengalaman pengguna (User Experience).
+AI-Generated Content: Alih-alih menggunakan teks statis, notifikasi dihasilkan secara dinamis oleh Gemini AI untuk memberikan pesan yang hangat, islami, dan memotivasi pengguna untuk mempersiapkan ibadah esok hari (seperti pengingat sahur untuk puasa sunnah).
 
-Personalization: AI menggunakan nama pengguna dan data waktu lokal untuk memberikan instruksi yang relevan, seperti saran persiapan sahur jika terdeteksi adanya jadwal puasa sunnah untuk keesokan harinya.
+Fail-Safe Redundancy: Sistem dilengkapi dengan mekanisme cadangan (fallback). Jika terjadi kendala koneksi internet atau kegagalan API, aplikasi akan tetap mengirimkan notifikasi pengingat standar agar pengguna tidak melewatkan informasi ibadah penting.
 
 Technical Implementation
-Large Language Model: Menggunakan model gemini-1.5-flash untuk pemrosesan teks yang cepat dan efisien pada perangkat mobile.
+WorkManager API: Implementasi SunnahNotificationWorker menggunakan library WorkManager untuk manajemen background task yang efisien dan hemat baterai.
 
-Prompt Engineering: Implementasi teknik prompting pada class GeminiAIHelper.java untuk memastikan output AI tetap berada dalam koridor islami, santun, dan informatif dengan batasan panjang kalimat tertentu.
+Periodic & One-Time Requests:
 
-Asynchronous Processing: Panggilan API dilakukan secara asinkron menggunakan ListenableFuture (Google Guava) untuk memastikan antarmuka aplikasi (UI Thread) tetap responsif dan tidak mengalami freezing saat AI sedang memproses teks.
+PeriodicWorkRequest: Digunakan untuk penjadwalan rutin setiap 24 jam.
 
-Secure API Management: Keamanan kunci akses (API Key) dikelola menggunakan file local.properties yang diintegrasikan melalui BuildConfig untuk mencegah kebocoran kredensial pada repositori publik.
+OneTimeWorkRequest: Digunakan untuk mekanisme pengetesan cepat dan eksekusi tugas yang bersifat segera.
+
+Synchronous AI Processing: Di dalam lingkungan Worker, panggilan ke Gemini AI dilakukan secara sinkronus menggunakan metode .get() pada ListenableFuture untuk memastikan asisten AI memiliki waktu yang cukup untuk menghasilkan teks sebelum tugas dianggap selesai oleh sistem.
+
+Notification Channel & Priority:
+
+Implementasi NotificationChannel (API 26+) untuk manajemen kategori notifikasi.
+
+Pengaturan PRIORITY_HIGH untuk memastikan pesan muncul sebagai heads-up notification (banner) di layar pengguna.
 
 Workflow
-Data Fetching: Aplikasi mengambil data kalender Hijriah dari API Aladhan.
+Trigger: WorkManager memicu SunnahNotificationWorker pada waktu yang telah dijadwalkan (setiap jam 8 malam).
 
-Logic Filtering: Sistem menyaring event sunnah yang tersedia di bulan tersebut.
+AI Request: Worker mengirimkan konteks ibadah esok hari (contoh: "Puasa Ayyamul Bidh") ke GeminiAIHelper.
 
-AI Processing: Data event terdekat dikirim sebagai parameter ke Gemini AI.
+Content Delivery: Jika berhasil, teks motivasi dari AI ditampilkan; jika gagal, pesan standar yang informatif dikirimkan sebagai pengganti.
 
-UI/UX Delivery: Output teks dari AI ditampilkan secara dinamis pada CardView khusus di dalam halaman kalender Hijriah.
+Persistence: Menggunakan ExistingPeriodicWorkPolicy.KEEP untuk memastikan jadwal tetap terjaga tanpa adanya duplikasi tugas yang berjalan bersamaan.
